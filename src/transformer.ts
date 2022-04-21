@@ -2,7 +2,7 @@
  * @Author: ganyutian@bytedance.com
  * @Date: 2022-04-17 16:28:49
  * @LastEditors: ganyutian@bytedance.com
- * @LastEditTime: 2022-04-17 16:38:36
+ * @LastEditTime: 2022-04-21 23:25:53
  * @Description: transformer
  */
 import { traverser } from "./traverser";
@@ -11,7 +11,7 @@ import { AST_Node, Visitor } from "./type";
 export const visitor: Visitor = {
   // 处理 NumberLiteral 类型
   NumberLiteral: (node, parent) => {
-    parent._context.push({
+    parent._context?.push?.({
       type: 'NumberLiteral',
       value: node.value,
     });
@@ -37,12 +37,13 @@ export const visitor: Visitor = {
       // 这么做是因为 top level 的 CallExpression 在 JavaScript 中也可以被当成是声明语句
       expression = {
         type: 'ExpressionStatement',
+        // @ts-expect-error
         expression,
       };
     }
 
     // 最后我们把 CallExpression 放入父结点的 context 中
-    parent._context.push(expression);
+    parent._context?.push?.(expression);
   }
 }
 /**

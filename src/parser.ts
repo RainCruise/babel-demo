@@ -2,10 +2,10 @@
  * @Author: ganyutian@bytedance.com
  * @Date: 2022-04-17 15:48:47
  * @LastEditors: ganyutian@bytedance.com
- * @LastEditTime: 2022-04-17 16:10:31
+ * @LastEditTime: 2022-04-21 23:29:57
  * @Description: parser
  */
-import { AST_Node, AST_Node, TokenEntryType } from "./type";
+import { AST_Node, TokenEntryType } from "./type";
 
 /**
  * 词法分析器接收语法分析得到的 token 数组，然后将其转换成 AST 结构。
@@ -33,8 +33,8 @@ export const parser = (tokens: TokenEntryType[]): AST_Node => {
       // 因为左圆括号后的 token 一定是函数名称
       const node = {
         type: 'CallExpression',
-        name: token.value,
-        params: [],
+        name: token.value as unknown as string,
+        params: [] as AST_Node[],
       };
       // 这里再跳一次函数名称
       token = tokens[++currentIndex];
@@ -73,7 +73,7 @@ export const parser = (tokens: TokenEntryType[]): AST_Node => {
    */
   const ast = {
     type: 'Program',
-    body: [],
+    body: [] as AST_Node[],
   };
 
   /**

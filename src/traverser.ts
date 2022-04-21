@@ -1,18 +1,13 @@
-import { AST_Node, AST_Node, Visitor } from "./type";
-
 /*
  * @Author: ganyutian@bytedance.com
  * @Date: 2022-04-17 16:03:26
  * @LastEditors: ganyutian@bytedance.com
- * @LastEditTime: 2022-04-17 16:27:21
+ * @LastEditTime: 2022-04-21 23:32:25
  * @Description: traverser
  */
 
+import { AST_Node, Visitor } from "./type";
 
-const visitor: Visitor = {
-  NumberLiteral() {},
-  CallExpression() {}
-};
 
 /**
  * 通过语法分析得到 ast 之后，接下来需要一个遍历器 (visitors) 去遍历结点。
@@ -28,7 +23,8 @@ export const traverser = (ast: AST_Node, visitor: Visitor) => {
 
     // 函数接收一个 node 以及其父结点作为参数
     // 这个结点会被传入到 visitor 中相应的处理函数那里
-    const traverseNode = (node: AST_Node, parent: AST_Node) => {
+    const traverseNode = (node: AST_Node, parent: AST_Node | null) => {
+      // @ts-expect-error
       const method = visitor[node.type];
       if (method) {
         method(node, parent);
@@ -36,11 +32,11 @@ export const traverser = (ast: AST_Node, visitor: Visitor) => {
       // 对不同的结点分开处理
       switch (node.type) {
         case 'Program':
-          traverseArray(node.body, node);
+          traverseArray(node.body!, node);
           break;
 
         case 'CallExpression':
-          traverseArray(node.params, node);
+          traverseArray(node.params!, node);
           break;
           
         // 这种情况下就没有子节点了，直接 break 出去
